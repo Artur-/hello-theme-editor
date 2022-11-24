@@ -237,7 +237,6 @@ class Palette extends EditorModule {
 
     this.shadowRoot.querySelector('#' + newVal).checked = true;
     this.lumoEditor.previewDocument.documentElement.setAttribute('theme', this.mode);
-    this.lumoEditor.$.defaultsIframe.contentDocument.documentElement.setAttribute('theme', this.mode);
 
     // TODO this feels like a hack
 

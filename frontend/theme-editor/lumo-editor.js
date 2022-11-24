@@ -399,7 +399,8 @@ export class LumoEditor extends PolymerElement {
       return '';
     }
 
-    return this.defaults[mode][name];
+    // return this.defaults[mode][name];
+    return window.getComputedStyle(document.documentElement).getPropertyValue(name);
   }
   constructor() {
     super();
