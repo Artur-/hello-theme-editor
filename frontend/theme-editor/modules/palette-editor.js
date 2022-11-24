@@ -123,13 +123,13 @@ class Palette extends EditorModule {
       <div>
         <input type="radio" name="mode" id="light" checked="">
         <label for="light">Light</label>
-        <button disabled>Default</button>
+        <button id="default-light"></button>
       </div>
 
       <div>
         <input type="radio" name="mode" id="dark">
         <label for="dark">Dark</label>
-        <button>Set as default</button>
+        <button id="default-dark"></button>
       </div>
     </main>
 
@@ -251,22 +251,20 @@ class Palette extends EditorModule {
     super.ready();
 
     // Light/dark mode selector
-    this.shadowRoot.querySelector('.mode').addEventListener('change', e => {
+    const mode = this.shadowRoot.querySelector('.mode');
+    mode.addEventListener('change', e => {
       this.mode = e.target.id;
     });
-    // Default mode selector
-    const defaultMode = this.shadowRoot.querySelector('.default-mode');
-    defaultMode.addEventListener('change', e => {
-      this.dispatchEvent(new CustomEvent("default-theme-palette-updated", {
-        detail: {palette: e.target.value},
-        bubbles: true,
-        composed: true,
-      }));
-    });
-    if (document.documentElement.getAttribute("theme") === "dark") {
-      defaultMode.querySelector("[value='dark']").checked=true
-    }
 
+    const light = this.shadowRoot.querySelector("#default-light");
+    const dark = this.shadowRoot.querySelector("#default-dark");
+
+    light.addEventListener("click", () => this.setDefaultThemePalette("light", true));
+    dark.addEventListener("click", () => this.setDefaultThemePalette("dark", true));
+
+    const documentDark = document.documentElement.getAttribute("theme") === "dark";
+    this.setDefaultThemePalette(documentDark?"dark":"light", false);
+   
     this.lumoEditor.addEventListener(LumoEditor.PROPERTY_CHANGED, e => {
       var entry = e.detail;
 
@@ -292,11 +290,40 @@ class Palette extends EditorModule {
     });
   }
 
+  setDefaultThemePalette(palette, emitEvent) {
+
+    const documentDark = palette == "dark";
+    const light = this.shadowRoot.querySelector("#default-light");
+    const dark = this.shadowRoot.querySelector("#default-dark");
+
+    setTimeout(()=>
+    this.mode = documentDark ? "dark":"light",0);
+
+    if (documentDark) {
+      light.innerText = "Set as default"
+      dark.innerText="Default";
+    } else {
+      dark.innerText = "Set as default"
+      light.innerText="Default";
+    }
+
+    dark.toggleAttribute("disabled",documentDark);
+    light.toggleAttribute("disabled",!documentDark);
+
+    if (emitEvent) {
+
+      this.dispatchEvent(new CustomEvent("default-theme-palette-updated", {
+        detail: {palette},
+        bubbles: true,
+        composed: true,
+      }));
+    }
+  }
   _modeChanged(newVal, oldVal) {
     if (oldVal == undefined) return;
 
     this.shadowRoot.querySelector('#' + newVal).checked = true;
-    this.lumoEditor.previewDocument.documentElement.setAttribute('theme', this.mode);
+    document.documentElement.setAttribute('theme', this.mode);
 
     // TODO this feels like a hack
 
