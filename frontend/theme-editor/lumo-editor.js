@@ -763,6 +763,18 @@ export class LumoEditor extends PolymerElement {
 
     // Update preview
     this._updateGlobalStyleSheet();
+
+    // Update file
+    for (var property in entry.properties) {
+      const value = entry.properties[property];
+
+      this.dispatchEvent(new CustomEvent("css-property-updated", {
+        detail: {property, value},
+        bubbles: true,
+        composed: true,
+      }));
+    }
+
   }
 
   _addHistoryEntry(entry) {

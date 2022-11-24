@@ -9,10 +9,10 @@ import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { copy } from './copy-to-clipboard.js';
-import { licenseCheckFailed, licenseCheckNoKey, licenseCheckOk, licenseInit } from './License';
+import { copy } from 'Frontend/generated/jar-resources/copy-to-clipboard.js';
+import { licenseCheckFailed, licenseCheckNoKey, licenseCheckOk, licenseInit } from 'Frontend/generated/jar-resources/License';
 // @ts-ignore
-import './theme-editor/lumo-editor.js';
+import 'Frontend/theme-editor/lumo-editor.js';
 var ConnectionStatus;
 (function (ConnectionStatus) {
     ConnectionStatus["ACTIVE"] = "active";
@@ -134,6 +134,9 @@ export class Connection extends Object {
     }
     sendLicenseCheck(product) {
         this.send('checkLicense', product);
+    }
+    updateCssProperty(property, value) {
+      this.send('updateCssProperty', {property,value});
     }
 }
 Connection.HEARTBEAT_INTERVAL = 180000;
@@ -1067,6 +1070,10 @@ export class VaadinDevTools extends LitElement {
             licenseCheckFailed({ message: 'Internal error: no connection', product: productInfo });
         }
     }
+    cssPropertyUpdated(e) {
+      console.log(`Update ${e.detail.property} -> ${e.detail.value}`);
+      this.frontendConnection.updateCssProperty(e.detail.property, e.detail.value);
+    }
     log(type, message, details, link) {
         const id = this.nextMessageId;
         this.nextMessageId += 1;
@@ -1392,7 +1399,7 @@ export class VaadinDevTools extends LitElement {
     </div>`;
     }
     renderThemeEditor() {
-        return html `<lumo-editor></lumo-editor>`;
+        return html `<lumo-editor @css-property-updated=${this.cssPropertyUpdated}></lumo-editor>`;
     }
     copyInfoToClipboard() {
         const items = this.renderRoot.querySelectorAll('.info-tray dt, .info-tray dd');
@@ -1484,4 +1491,3 @@ __decorate([
 if (customElements.get('vaadin-dev-tools') === undefined) {
     customElements.define('vaadin-dev-tools', VaadinDevTools);
 }
-//# sourceMappingURL=vaadin-dev-tools.js.map
