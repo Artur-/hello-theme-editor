@@ -779,10 +779,6 @@ export class LumoEditor extends PolymerElement {
         }
       }
     });
-
-    this.$.confirmReset.addEventListener('confirm', e => {
-      this.reset();
-    });
   }
 
   _handlePropertyChange(entry) {
