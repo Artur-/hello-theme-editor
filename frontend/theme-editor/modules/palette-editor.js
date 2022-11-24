@@ -37,35 +37,71 @@ class Palette extends EditorModule {
         user-select: none;
       }
 
-      .mode > label {
+      .mode > div {
         flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 2;
-        background-color: var(--lumo-contrast-50pct);
-        color: var(--dev-tools-background-color-active);
-        border-radius: var(--lumo-border-radius-m) 0 0 var(--lumo-border-radius-m);
+        position: relative;
       }
 
-      .mode > input:focus-visible + label {
+      .mode label {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 28px;
+        background-color: var(--lumo-contrast-40pct);
+        color: var(--dev-tools-background-color-active);
+        border-radius: var(--lumo-border-radius-m) 0 0 var(--lumo-border-radius-m);
+        padding: 0 1em;
+      }
+
+      .mode input:focus-visible + label {
         outline: 2px solid var(--lumo-primary-color);
       }
 
-      .mode > input:checked + label {
-        background-color: var(--lumo-contrast-80pct);
+      .mode input:checked + label {
+        background-color: var(--lumo-contrast-90pct);
         color: var(--dev-tools-background-color-active);
       }
 
-      .mode > input {
+      .mode button {
+        float: right;
+        font: inherit;
+        font-size: 12px;
+        background: transparent;
+        border: 0;
+        -webkit-appearance: none;
+        appearance: none;
+        padding: 0 0.7em;
+        margin: 2px;
+        height: 24px;
+        margin-top: -26px;
+        border-radius: var(--lumo-border-radius-m);
+        cursor: pointer;
+        color: var(--lumo-header-text-color);
+        background-color: var(--lumo-base-color);
+      }
+
+      .mode button:hover {
+        opacity: 0.8;
+      }
+
+      .mode button:disabled {
+        color: var(--dev-tools-background-color-active);
+        background-color: transparent;
+        pointer-events: none;
+      }
+
+      .mode input:not(:checked) ~ button {
+        visibility: hidden !important;
+      }
+
+      .mode input {
         position: absolute;
         opacity: 0;
         pointer-events: none;
       }
 
-      .mode > label:last-child {
+      .mode :last-child label {
         border-radius: 0 var(--lumo-border-radius-m) var(--lumo-border-radius-m) 0;
       }
 
@@ -80,49 +116,21 @@ class Palette extends EditorModule {
         flex: 1;
         margin: 0 0 0.5em;
       }
-
-      .default-mode {
-        border: 0;
-        padding: 0;
-        margin: 1em 0;
-        display: flex;
-        align-items: center;
-        gap: 1em;
-      }
-
-      .default-mode legend {
-        float: left;
-        font-size: var(--lumo-font-size-s);
-        font-weight: 500;
-        color: var(--lumo-secondary-text-color);
-      }
-
-      .default-mode label {
-        display: flex;
-        align-items: center;
-        gap: 0.25em;
-      }
     </style>
-
-    <fieldset class="default-mode">
-      <legend>Default mode</legend>
-      <label>
-        <input type="radio" name="default-mode" value="light" checked="">
-        Light
-      </label>
-      <label>
-        <input type="radio" name="default-mode" value="dark">
-        Dark
-      </label>
-    </fieldset>
 
     <div class="mode-label">Mode</div>
     <main class="mode">
-      <input type="radio" name="mode" id="light" checked="">
-      <label for="light">Light</label>
+      <div>
+        <input type="radio" name="mode" id="light" checked="">
+        <label for="light">Light</label>
+        <button disabled>Default</button>
+      </div>
 
-      <input type="radio" name="mode" id="dark">
-      <label for="dark">Dark</label>
+      <div>
+        <input type="radio" name="mode" id="dark">
+        <label for="dark">Dark</label>
+        <button>Set as default</button>
+      </div>
     </main>
 
     <preset-picker label="Preset">
