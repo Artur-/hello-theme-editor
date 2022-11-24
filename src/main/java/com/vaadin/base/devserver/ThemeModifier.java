@@ -18,7 +18,7 @@ import com.helger.css.writer.CSSWriter;
 
 public class ThemeModifier {
 
-    public static void updateCssProperty(String property, String value) {
+    public static void updateCssProperty(String property, String value, String paletteMode) {
         File projectFolder = new File("."); // FIXME
         String themeName = "hello-theme-editor"; // FIXME
 
@@ -27,7 +27,7 @@ public class ThemeModifier {
         File theme = new File(themes, themeName);
         File styles = new File(theme, "styles.css");
         CascadingStyleSheet styleSheet = CSSReader.readFromFile(styles, StandardCharsets.UTF_8, ECSSVersion.LATEST);
-        CSSStyleRule htmlHostRule = findHtmlHostrule(styleSheet);
+        CSSStyleRule htmlHostRule = findHtmlHostrule(styleSheet, paletteMode);
 
         CSSDeclaration declaration = htmlHostRule.getAllDeclarations()
                 .findFirst(decl -> decl.getProperty().equals(property));
@@ -40,7 +40,7 @@ public class ThemeModifier {
         } else {
             if (expression == null) {
                 htmlHostRule.removeDeclaration(declaration);
-            }else {
+            } else {
                 declaration.setExpression(expression);
             }
         }
@@ -52,26 +52,60 @@ public class ThemeModifier {
         }
     }
 
-    private static CSSStyleRule findHtmlHostrule(CascadingStyleSheet csss) {
+    private static CSSStyleRule findHtmlHostrule(CascadingStyleSheet csss, String paletteMode) {
         ICommonsList<CSSStyleRule> allRules = csss.getAllStyleRules();
         CSSStyleRule rule = allRules.findFirst(r -> {
-            if (r.getSelectorCount() == 2 && "html".equals(r.getSelectorAtIndex(0).getAsCSSString())
-                    && ":host".equals(r.getSelectorAtIndex(1).getAsCSSString())) {
-                return true;
+            if (r.getSelectorCount() != 2) {
+                return false;
             }
-            return false;
+            String selector1 = r.getSelectorAtIndex(0).getAsCSSString();
+            String selector2 = r.getSelectorAtIndex(1).getAsCSSString();
+
+            String expectedSelector1 = getExpectedSelector1(paletteMode);
+            String expectedSelector2 = getExpectedSelector2(paletteMode);
+
+            return (expectedSelector1.equals(selector1)
+                    && expectedSelector2.equals(selector2));
         });
 
-        if (rule == null) {
+        if (rule == null)
+
+        {
             rule = new CSSStyleRule();
             CSSSelector selector = new CSSSelector();
-            CSSSelectorSimpleMember member = new CSSSelectorSimpleMember("html, :host");
+            CSSSelectorSimpleMember member = new CSSSelectorSimpleMember(
+                    getExpectedSelector1(paletteMode) + ", " + getExpectedSelector2(paletteMode));
             selector.addMember(member);
             rule.addSelector(selector);
             csss.addRule(rule);
         }
 
         return rule;
+    }
+
+    private static String getExpectedSelector1(String paletteMode) {
+        return getExpectedSelector(paletteMode, 0);
+    }
+    private static String getExpectedSelector2(String paletteMode) {
+        return getExpectedSelector(paletteMode, 1);
+    }
+
+    private static String getExpectedSelector(String paletteMode, int idx) {
+        if (paletteMode == null || paletteMode.equals("light")) {
+            if (idx == 0) {
+                return "html";
+            } else {
+                return ":host";
+            }
+        } else {
+            String themeAttribute = "[theme~=\"" + paletteMode + "\"]";
+            if (idx == 0) {
+                return themeAttribute;
+            } else {
+                return ":host(" + themeAttribute + ")";
+            }
+        }
+
     }
 
 }
