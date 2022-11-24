@@ -5,9 +5,9 @@ import './modules/palette-editor.js';
 import './modules/typography-editor.js';
 import './modules/style-editor.js';
 import './modules/size-and-space-editor.js';
-import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+import { html, htmlLiteral } from '@polymer/polymer/lib/utils/html-tag.js';
 import { DomModule } from '@polymer/polymer/lib/elements/dom-module.js';
-window.alert("foo")
+import { registerStyles, css, unsafeCSS } from '@vaadin/vaadin-themable-mixin';
 const $_documentContainer = document.createElement('template');
 $_documentContainer.innerHTML = `<dom-module id="shared-editor-module-styles">
   <template>
@@ -34,7 +34,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-editor-module-styles">
         cursor: default;
         font-weight: 500;
         color: var(--lumo-secondary-text-color);
-        outline: none;
         margin: -1em;
         padding: 0 1em;
         height: var(--lumo-size-m);
@@ -127,6 +126,58 @@ $_documentContainer.innerHTML = `<dom-module id="shared-editor-module-styles">
   </template>
 </dom-module>`;
 
+const editorLumoPropertyOverrides = htmlLiteral`
+:host {
+  --lumo-font-family: var(--dev-tools-font-family);
+  --lumo-font-size-xs: var(--dev-tools-font-size-small);
+  --lumo-font-size-s: var(--dev-tools-font-size-small);
+  --lumo-font-size-m: var(--dev-tools-font-size);
+
+  --lumo-size-xs: 20px;
+  --lumo-size-s: 24px;
+  --lumo-size-m: 30px;
+  --lumo-size-l: 36px;
+  --lumo-size-xl: 44px;
+  --lumo-space-xs: 4px;
+  --lumo-space-s: 8px;
+  --lumo-space-m: 16px;
+  --lumo-space-l: 24px;
+  --lumo-space-xl: 32px;
+
+  --lumo-header-text-color: var(--dev-tools-text-color-emphasis);
+  --lumo-body-text-color: var(--dev-tools-text-color);
+  --lumo-secondary-text-color: var(--dev-tools-text-color-secondary);
+  --lumo-tertiary-text-color: var(--dev-tools-text-color-secondary);
+  --lumo-primary-color: var(--dev-tools-blue-color);
+  --lumo-primary-color-50pct: var(--dev-tools-blue-color);
+  --lumo-primary-text-color: var(--dev-tools-blue-color);
+  --lumo-error-color: var(--dev-tools-red-color);
+  --lumo-error-color-50pct: var(--dev-tools-red-color);
+  --lumo-error-text-color: var(--dev-tools-red-color);
+  --lumo-success-color: var(--dev-tools-green-color);
+  --lumo-success-color-50pct: var(--dev-tools-green-color);
+  --lumo-success-text-color: var(--dev-tools-green-color);
+
+  --lumo-base-color: var(--dev-tools-background-color-active);
+
+  --lumo-contrast-5pct: rgba(255, 255, 255, 0.04);
+  --lumo-contrast-10pct: rgba(255, 255, 255, 0.08);
+  --lumo-contrast-20pct: rgba(255, 255, 255, 0.14);
+  --lumo-contrast-30pct: rgba(255, 255, 255, 0.25);
+  --lumo-contrast-40pct: rgba(255, 255, 255, 0.36);
+  --lumo-contrast-50pct: rgba(255, 255, 255, 0.47);
+  --lumo-contrast-60pct: rgba(255, 255, 255, 0.58);
+  --lumo-contrast-70pct: rgba(255, 255, 255, 0.69);
+  --lumo-contrast-80pct: rgba(255, 255, 255, 0.80);
+  --lumo-contrast-90pct: rgba(255, 255, 255, 0.9);
+  --lumo-contrast: rgba(255, 255, 255, 1);
+
+  --lumo-border-radius-s: 3px;
+  --lumo-border-radius-m: 6px;
+  --lumo-border-radius-l: 9px;
+}
+`;
+
 document.head.appendChild($_documentContainer.content);
 export class LumoEditor extends PolymerElement {
   static get template() {
@@ -134,21 +185,13 @@ export class LumoEditor extends PolymerElement {
     <style include="lumo-color lumo-typography">
       :host {
         display: block;
-        width: 320px;
-        height: 100%;
-        --lumo-font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", Helvetica, Arial, sans-serif;
-        --lumo-font-size-xs: 11px;
-        --lumo-font-size-s: 12px;
-        --lumo-font-size-m: 14px;
-        --lumo-size-m: 30px;
-        --lumo-size-s: 24px;
-        --lumo-space-m: 16px;
-        --lumo-space-s: 8px;
-        --lumo-space-xs: 4px;
-        --lumo-border-radius: 4px;
-        font-family: var(--lumo-font-family);
-        font-size: var(--lumo-font-size-m);
+        overflow: auto;
+        flex: 1;
+        font-family: var(--dev-tools-font-family);
+        font-size: var(--dev-tools-font-size);
       }
+
+      ${editorLumoPropertyOverrides}
 
       .tools {
         display: flex;
@@ -237,8 +280,12 @@ export class LumoEditor extends PolymerElement {
         user-select: none;
       }
 
+      .tabs > input:focus-visible + .tab {
+        outline: 2px solid var(--lumo-primary-color);
+      }
+
       .tabs > input:checked + .tab {
-        color: var(--lumo-primary-text-color);
+        color: var(--lumo-header-text-color);
       }
 
       .tabs > input {
@@ -333,13 +380,14 @@ export class LumoEditor extends PolymerElement {
       </section>
     </main>
 
-    <vaadin-dialog id="downloadDialog" theme="editor output">
+    <vaadin-dialog id="downloadDialog" theme="veditor output">
       <template>
         <div class="download-dialog">
           <h2>Download</h2>
           <p>Copy the HTML below to a new <code>.html</code> file and import it in your app after the default Lumo theme imports.</p>
           <p>For example: <code>&lt;link rel="import" href="my-lumo-theme.html"&gt;</code></p>
-          <vaadin-text-area id="output" label=""></vaadin-text-area>
+          <vaadin-text-area id="output" label=import { unsafeCSS } from '@vaadin/vaadin-themable-mixin/register-styles';
+""></vaadin-text-area>
           <h4>Need more help?</h4>
           <p>See the <a href="https://vaadin.com/themes/lumo">Lumo theme documentation</a> and the <a href="https://vaadin.com/docs/flow/theme/theming-overview.html">theming documentation for Vaadin Flow</a>.</p>
           <div class="footer">
@@ -938,3 +986,19 @@ export class LumoEditor extends PolymerElement {
 }
 
 customElements.define(LumoEditor.is, LumoEditor);
+
+// Workaround to show all Vaadin component overlays on top of the dev tools window and adapt the same styles
+registerStyles('vaadin-*-overlay, vaadin-overlay', css`
+  /* ${unsafeCSS(editorLumoPropertyOverrides)} */
+
+  :host([theme~="dev-tools-theme-editor"]) {
+    z-index: 20001;
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    [part="overlay"] {
+      backdrop-filter: blur(8px);
+      background-color: var(--dev-tools-background-color-active-blurred);
+    }
+  }
+`);

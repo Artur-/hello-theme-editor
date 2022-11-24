@@ -25,7 +25,6 @@ class Palette extends EditorModule {
         flex-wrap: wrap;
         margin: 0.5em 0;
         border-radius: 4px;
-        overflow: hidden;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
@@ -40,19 +39,28 @@ class Palette extends EditorModule {
         font-weight: 500;
         font-size: 14px;
         line-height: 2;
-        background-color: var(--lumo-contrast-5pct);
-        color: var(--lumo-secondary-text-color);
+        background-color: var(--lumo-contrast-50pct);
+        color: var(--dev-tools-background-color-active);
+        border-radius: var(--lumo-border-radius-m) 0 0 var(--lumo-border-radius-m);
+      }
+
+      .mode > input:focus-visible + label {
+        outline: 2px solid var(--lumo-primary-color);
       }
 
       .mode > input:checked + label {
-        color: var(--lumo-primary-contrast-color);
-        background-color: var(--lumo-primary-color);
+        background-color: var(--lumo-contrast-80pct);
+        color: var(--dev-tools-background-color-active);
       }
 
       .mode > input {
         position: absolute;
         opacity: 0;
         pointer-events: none;
+      }
+
+      .mode > label:last-child {
+        border-radius: 0 var(--lumo-border-radius-m) var(--lumo-border-radius-m) 0;
       }
 
       details div {
@@ -248,7 +256,7 @@ class Palette extends EditorModule {
       paletteMode: entry.paletteMode,
       history: true
     };
-    
+
     var dependentPropText = `--lumo-${which}-text-color`;
     var dependentProp50 = `--lumo-${which}-color-50pct`;
     var dependentProp10 = `--lumo-${which}-color-10pct`;
