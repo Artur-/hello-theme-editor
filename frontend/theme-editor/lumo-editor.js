@@ -346,7 +346,7 @@ export class LumoEditor extends PolymerElement {
         <size-and-space-editor></size-and-space-editor>
       </section>
 
-      <login-to-access></login-to-access>
+      <slot></slot>
     </main>
 
 `;

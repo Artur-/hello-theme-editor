@@ -1,18 +1,19 @@
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 @customElement('login-to-access')
 export class LoginToAccess extends LitElement {
   listeners: Record<string, EventListener> = {};
+  @property({ type: String })
+  loginLink: string = "";
 
   render() {
     return html`
       <div
-        style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 100000; background: var(--dev-tools-background-color-active-blurred); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+        style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 100000; background: var(--dev-tools-background-color-active-blurred); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px);"
+      >
         <div>
-          <a href="" style="color: var(--dev-tools-text-color); font-weight: 600;">Log in</a>
-          or
-          <a href="" style="color: var(--dev-tools-text-color); font-weight: 600;">sign up</a>
+          <a href=${this.loginLink}> Log in or sign up</a>
           to use the theme editor.
         </div>
       </div>

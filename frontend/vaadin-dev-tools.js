@@ -75,13 +75,13 @@ export class Connection extends Object {
                 this.onReload();
             }
         }
-        else if (json.command === 'license-check-ok') {
+        else if (json.command === 'license-check-ok' && json.data.name !== 'vaadin-dev-tools-theme-editor') {
             licenseCheckOk(json.data);
         }
-        else if (json.command === 'license-check-failed') {
+        else if (json.command === 'license-check-failed' && json.data.name !== 'vaadin-dev-tools-theme-editor') {
             licenseCheckFailed(json.data);
         }
-        else if (json.command === 'license-check-nokey') {
+        else if (json.command === 'license-check-nokey' && json.data.product.name !== 'vaadin-dev-tools-theme-editor') {
             licenseCheckNoKey(json.data);
         }
         else {
@@ -930,6 +930,16 @@ export class VaadinDevTools extends LitElement {
               this.activeTimer = setTimeout(() =>
                this.setActive(true),500);
             }
+            else if ((message === null || message === void 0 ? void 0 : message.command) === 'license-check-ok') {
+              if (message.data.name === "vaadin-dev-tools-theme-editor") {
+                this.hasThemeEditorAccess=true;
+              }
+            }
+            else if ((message === null || message === void 0 ? void 0 : message.command) === 'license-check-nokey') {
+              if (message.data.product.name === "vaadin-dev-tools-theme-editor") {
+                this.themeEditorLoginLink = message.data.message;
+              }
+            }
             else {
                 // eslint-disable-next-line no-console
                 console.error('Unknown message from front-end connection:', JSON.stringify(message));
@@ -1416,7 +1426,12 @@ export class VaadinDevTools extends LitElement {
     </div>`;
     }
     renderThemeEditor() {
-        return html `<lumo-editor @css-property-updated=${this.cssPropertyUpdated}></lumo-editor>`;
+      if (this.hasThemeEditorAccess === undefined) {
+        this.hasThemeEditorAccess = false;
+        this.checkLicense({name:"vaadin-dev-tools-theme-editor", version: '0.0.1'});
+      }
+      return html`<lumo-editor @css-property-updated=${this.cssPropertyUpdated}>
+      ${this.hasThemeEditorAccess? html``:html`<login-to-access .loginLink=${this.themeEditorLoginLink}></login-to-access>`}</lumo-editor>`;
     }
     copyInfoToClipboard() {
         const items = this.renderRoot.querySelectorAll('.info-tray dt, .info-tray dd');
@@ -1472,6 +1487,12 @@ __decorate([
 __decorate([
     property({ type: Boolean, attribute: false })
 ], VaadinDevTools.prototype, "expanded", void 0);
+__decorate([
+    property({ type: Boolean, attribute: false })
+], VaadinDevTools.prototype, "hasThemeEditorAccess", void 0);
+__decorate([
+    property({ type: String, attribute: false })
+], VaadinDevTools.prototype, "themeEditorLoginLink", void 0);
 __decorate([
     property({ type: Array, attribute: false })
 ], VaadinDevTools.prototype, "messages", void 0);
