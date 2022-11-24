@@ -207,6 +207,9 @@ public class DebugWindowConnection implements BrowserLiveReload {
                         errorMessage);
                 send(resource, "license-check-failed", pm);
             }
+        } else if ("updateCssProperty".equals(command)) {
+            JsonObject data = json.getObject("data");
+            ThemeModifier.updateCssProperty(data.getString("property"), data.getString("value"));
         } else {
             getLogger().info("Unknown command from the browser: " + command);
         }
