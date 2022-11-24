@@ -855,19 +855,16 @@ export class LumoEditor extends PolymerElement {
   }
 
   _updateGlobalStyleSheet() {
-    var style = this._getGlobalStyleSheet();
-    style.innerHTML = this._getStyleExport();
+    this._getGlobalStyleSheet().replaceSync(this._getStyleExport());
   }
 
   _getGlobalStyleSheet() {
-    const id = 'lumo';
-    var style = this.previewDocument.querySelector('style#' + id);
-    if (!style) {
-      style = this.previewDocument.createElement('style');
-      style.id = id;
-      this.previewDocument.body.appendChild(style);
+    if (!this.lumoEditorSheet) {
+      this.lumoEditorSheet  = new CSSStyleSheet();
+      this.lumoEditorSheet.replaceSync("");
+      this.previewDocument.adoptedStyleSheets = [...this.previewDocument.adoptedStyleSheets, this.lumoEditorSheet];
     }
-    return style;
+    return this.lumoEditorSheet;
   }
 
   _getStyleExport() {
