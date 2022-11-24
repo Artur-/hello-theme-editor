@@ -13,7 +13,7 @@ export class LoginToAccess extends LitElement {
         style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 100000; background: var(--dev-tools-background-color-active-blurred); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px);"
       >
         <div>
-          <a href=${this.loginLink}> Log in or sign up</a>
+          <a href="${this.loginLink}" style="color: var(--dev-tools-text-color-emphasis); font-weight: 600;">Log in or sign up</a>
           to use the theme editor.
         </div>
       </div>
