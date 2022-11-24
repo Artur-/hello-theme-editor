@@ -135,8 +135,8 @@ export class Connection extends Object {
     sendLicenseCheck(product) {
         this.send('checkLicense', product);
     }
-    sendUpdateCssProperty(property, value) {
-      this.send('updateCssProperty', {property,value});
+    sendUpdateCssProperty(property, value, paletteMode) {
+      this.send('updateCssProperty', {property,value, paletteMode});
     }
 }
 Connection.HEARTBEAT_INTERVAL = 180000;
@@ -1092,14 +1092,14 @@ export class VaadinDevTools extends LitElement {
         }
     }
     cssPropertyUpdated(e) {
-      console.log(`Update ${e.detail.property} -> ${e.detail.value}`);
+      console.log(`Update ${e.detail.property} -> ${e.detail.value} (${e.detail.paletteMode})`);
       if (this.activeTimer) {
         clearTimeout(this.activeTimer);
         this.activeTimer = undefined;
       }
 
       this.setActive(false);
-      this.frontendConnection.sendUpdateCssProperty(e.detail.property, e.detail.value);
+      this.frontendConnection.sendUpdateCssProperty(e.detail.property, e.detail.value, e.detail.paletteMode);
     }
     log(type, message, details, link) {
         const id = this.nextMessageId;

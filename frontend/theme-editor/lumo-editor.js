@@ -770,7 +770,7 @@ export class LumoEditor extends PolymerElement {
       const value = entry.properties[property];
 
       this.dispatchEvent(new CustomEvent("css-property-updated", {
-        detail: {property, value},
+        detail: {property, value,paletteMode: entry.paletteMode},
         bubbles: true,
         composed: true,
       }));
