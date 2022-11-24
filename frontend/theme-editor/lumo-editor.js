@@ -185,6 +185,8 @@ export class LumoEditor extends PolymerElement {
         height: 80vh;
         font-family: var(--dev-tools-font-family);
         font-size: var(--dev-tools-font-size);
+        position: relative;
+        animation: fade-in var(--dev-tools-transition-duration) ease-in;
       }
 
       ${editorLumoPropertyOverrides}
