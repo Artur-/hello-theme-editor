@@ -240,12 +240,6 @@ export class LumoEditor extends PolymerElement {
         transform: scaleX(-1);
       }
 
-      .tools .download {
-        margin-left: auto;
-        margin-right: 0;
-        padding: 0 0.5em 0 0.25em;
-        font-weight: 500;
-      }
       .tools .primary:not(:disabled) {
         background-color: var(--lumo-primary-color);
         color: var(--lumo-primary-contrast-color);
@@ -316,30 +310,6 @@ export class LumoEditor extends PolymerElement {
         font-family: monospace;
         white-space: pre;
       }
-
-      .download-dialog {
-        display: flex;
-        flex-direction: column;
-        height: 80vh;
-        width: 50em;
-        max-width: 100%;
-        box-sizing: border-box;
-      }
-      .download-dialog h2 {
-        margin-top: 0;
-      }
-      .download-dialog vaadin-text-area {
-        flex: 1;
-      }
-      .download-dialog .footer {
-        margin: calc(var(--lumo-space-l) * -1);
-        margin-top: var(--lumo-space-l);
-        background-color: var(--lumo-contrast-5pct);
-        padding: var(--lumo-space-wide-m);
-      }
-      .download-dialog vaadin-button {
-        float: right;
-      }
     </style>
 
     <div class="tools" hidden="[[hideTools]]">
@@ -347,7 +317,6 @@ export class LumoEditor extends PolymerElement {
       <button on-click="redo" class="redo" title="Redo (Ctrl + Y / ⇧⌘Z)" disabled=""><iron-icon icon="lumo:redo"></iron-icon></button>
       <div class="divider"></div>
       <button on-click="_confirmReset" class="reset" title="Reset all" disabled=""><iron-icon icon="lumo:reload"></iron-icon></button>
-      <button on-click="_download" class="download primary" title="Download" disabled><iron-icon icon="lumo:download"></iron-icon> Download</button>
     </div>
 
     <main class="tabs">
@@ -380,22 +349,6 @@ export class LumoEditor extends PolymerElement {
       </section>
     </main>
 
-    <vaadin-dialog id="downloadDialog" theme="veditor output">
-      <template>
-        <div class="download-dialog">
-          <h2>Download</h2>
-          <p>Copy the HTML below to a new <code>.html</code> file and import it in your app after the default Lumo theme imports.</p>
-          <p>For example: <code>&lt;link rel="import" href="my-lumo-theme.html"&gt;</code></p>
-          <vaadin-text-area id="output" label=import { unsafeCSS } from '@vaadin/vaadin-themable-mixin/register-styles';
-""></vaadin-text-area>
-          <h4>Need more help?</h4>
-          <p>See the <a href="https://vaadin.com/themes/lumo">Lumo theme documentation</a> and the <a href="https://vaadin.com/docs/flow/theme/theming-overview.html">theming documentation for Vaadin Flow</a>.</p>
-          <div class="footer">
-            <vaadin-button theme="primary" class="close">Close</vaadin-button>
-          </div>
-        </div>
-      </template>
-    </vaadin-dialog>
 `;
   }
 
@@ -874,19 +827,10 @@ export class LumoEditor extends PolymerElement {
     this.$.confirmReset.opened = true;
   }
 
-  _download() {
-    this.$.downloadDialog.opened = true;
-    this.$.downloadDialog.$.overlay.content.querySelector('#output').value = this.getThemeHtml();
-    this.$.downloadDialog.$.overlay.content.querySelector('vaadin-button.close').addEventListener('click', e => {
-      this.$.downloadDialog.opened = false;
-    });
-  }
-
   _updateButtonState() {
     this.shadowRoot.querySelector('.undo').disabled = this.historyIndex == -1;
     this.shadowRoot.querySelector('.redo').disabled = this.historyIndex == this.historyEntries.length - 1;
     this.shadowRoot.querySelector('.reset').disabled = this.historyIndex == -1;
-    this.shadowRoot.querySelector('.download').disabled = this.historyIndex == -1;
   }
 
   _notifyPropertyChange(entry) {
@@ -972,13 +916,6 @@ export class LumoEditor extends PolymerElement {
     return modules;
   }
 
-  getThemeHtml() {
-    let output = '<custom-style>\n  <style>\n';
-    output += this._getStyleExport();
-    output += '\n  </style>\n</custom-style>\n'
-    output += this._getStyleModuleExport();
-    return output;
-  }
 }
 
 customElements.define(LumoEditor.is, LumoEditor);
