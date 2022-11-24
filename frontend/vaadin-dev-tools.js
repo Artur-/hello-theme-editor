@@ -135,7 +135,7 @@ export class Connection extends Object {
     sendLicenseCheck(product) {
         this.send('checkLicense', product);
     }
-    updateCssProperty(property, value) {
+    sendUpdateCssProperty(property, value) {
       this.send('updateCssProperty', {property,value});
     }
 }
@@ -917,7 +917,11 @@ export class VaadinDevTools extends LitElement {
                 this.serverInfo = message.data;
             }
             else if ((message === null || message === void 0 ? void 0 : message.command) === 'featureFlags') {
-                this.features = message.data.features;
+              this.features = message.data.features;
+            }
+            else if ((message === null || message === void 0 ? void 0 : message.command) === 'cssPropertyUpdated') {
+              setTimeout(() =>
+               this.setActive(true),500);
             }
             else {
                 // eslint-disable-next-line no-console
@@ -1072,7 +1076,10 @@ export class VaadinDevTools extends LitElement {
     }
     cssPropertyUpdated(e) {
       console.log(`Update ${e.detail.property} -> ${e.detail.value}`);
-      this.frontendConnection.updateCssProperty(e.detail.property, e.detail.value);
+      if (!this.liveReloadDisabled) {
+        this.setActive(false);
+      }
+      this.frontendConnection.sendUpdateCssProperty(e.detail.property, e.detail.value);
     }
     log(type, message, details, link) {
         const id = this.nextMessageId;
