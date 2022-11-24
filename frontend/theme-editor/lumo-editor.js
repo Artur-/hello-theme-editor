@@ -186,7 +186,7 @@ export class LumoEditor extends PolymerElement {
       :host {
         display: block;
         overflow: auto;
-        flex: 1;
+        height: 80vh;
         font-family: var(--dev-tools-font-family);
         font-size: var(--dev-tools-font-size);
       }
