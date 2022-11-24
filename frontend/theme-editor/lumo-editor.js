@@ -8,6 +8,7 @@ import './modules/size-and-space-editor.js';
 import { html, htmlLiteral } from '@polymer/polymer/lib/utils/html-tag.js';
 import { DomModule } from '@polymer/polymer/lib/elements/dom-module.js';
 import { registerStyles, css, unsafeCSS } from '@vaadin/vaadin-themable-mixin';
+import './login-to-access.ts';
 const $_documentContainer = document.createElement('template');
 $_documentContainer.innerHTML = `<dom-module id="shared-editor-module-styles">
   <template>
@@ -342,6 +343,8 @@ export class LumoEditor extends PolymerElement {
       <section class="tab-content">
         <size-and-space-editor></size-and-space-editor>
       </section>
+
+      <login-to-access></login-to-access>
     </main>
 
 `;
