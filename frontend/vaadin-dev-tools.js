@@ -198,15 +198,15 @@ export class VaadinDevTools extends LitElement {
               --dev-tools-border-radius: 0.5rem;
               --dev-tools-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.4);
 
-              --dev-tools-blue-hsl: ${this.BLUE_HSL};
+              --dev-tools-blue-hsl: ${VaadinDevTools.BLUE_HSL};
               --dev-tools-blue-color: hsl(var(--dev-tools-blue-hsl));
-              --dev-tools-green-hsl: ${this.GREEN_HSL};
+              --dev-tools-green-hsl: ${VaadinDevTools.GREEN_HSL};
               --dev-tools-green-color: hsl(var(--dev-tools-green-hsl));
-              --dev-tools-grey-hsl: ${this.GREY_HSL};
+              --dev-tools-grey-hsl: ${VaadinDevTools.GREY_HSL};
               --dev-tools-grey-color: hsl(var(--dev-tools-grey-hsl));
-              --dev-tools-yellow-hsl: ${this.YELLOW_HSL};
+              --dev-tools-yellow-hsl: ${VaadinDevTools.YELLOW_HSL};
               --dev-tools-yellow-color: hsl(var(--dev-tools-yellow-hsl));
-              --dev-tools-red-hsl: ${this.RED_HSL};
+              --dev-tools-red-hsl: ${VaadinDevTools.RED_HSL};
               --dev-tools-red-color: hsl(var(--dev-tools-red-hsl));
 
               /* Needs to be in ms, used in JavaScript as well */
