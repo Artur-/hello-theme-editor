@@ -20,6 +20,12 @@ class Palette extends EditorModule {
         font-size: var(--lumo-font-size-m);
       }
 
+      .mode-label {
+        font-size: var(--lumo-font-size-s);
+        font-weight: 500;
+        color: var(--lumo-secondary-text-color);
+      }
+
       .mode {
         display: flex;
         flex-wrap: wrap;
@@ -74,8 +80,43 @@ class Palette extends EditorModule {
         flex: 1;
         margin: 0 0 0.5em;
       }
+
+      .default-mode {
+        border: 0;
+        padding: 0;
+        margin: 1em 0;
+        display: flex;
+        align-items: center;
+        gap: 1em;
+      }
+
+      .default-mode legend {
+        float: left;
+        font-size: var(--lumo-font-size-s);
+        font-weight: 500;
+        color: var(--lumo-secondary-text-color);
+      }
+
+      .default-mode label {
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+      }
     </style>
 
+    <fieldset class="default-mode">
+      <legend>Default mode</legend>
+      <label>
+        <input type="radio" name="default-mode" checked="">
+        Light
+      </label>
+      <label>
+        <input type="radio" name="default-mode">
+        Dark
+      </label>
+    </fieldset>
+
+    <div class="mode-label">Mode</div>
     <main class="mode">
       <input type="radio" name="mode" id="light" checked="">
       <label for="light">Light</label>
@@ -83,7 +124,6 @@ class Palette extends EditorModule {
       <input type="radio" name="mode" id="dark">
       <label for="dark">Dark</label>
     </main>
-
 
     <preset-picker label="Preset">
       <template>

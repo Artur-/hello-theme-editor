@@ -132,6 +132,7 @@ const editorLumoPropertyOverrides = htmlLiteral`
   --lumo-body-text-color: var(--dev-tools-text-color);
   --lumo-secondary-text-color: var(--dev-tools-text-color-secondary);
   --lumo-tertiary-text-color: var(--dev-tools-text-color-secondary);
+  --lumo-disabled-text-color: rgba(255, 255, 255, 0.4);
   --lumo-primary-color: var(--dev-tools-blue-color);
   --lumo-primary-color-50pct: var(--dev-tools-blue-color);
   --lumo-primary-text-color: var(--dev-tools-blue-color);
