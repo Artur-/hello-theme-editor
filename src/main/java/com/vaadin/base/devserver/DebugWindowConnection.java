@@ -214,6 +214,12 @@ public class DebugWindowConnection implements BrowserLiveReload {
 
             ThemeModifier.updateCssProperty(data.getString("property"),value, paletteMode);
             send(resource, "cssPropertyUpdated",null);
+        } else if ("setDefaultThemePalette".equals(command)) {
+            JsonObject data = json.getObject("data");
+            String palette = data.getString("palette");
+
+            ThemeModifier.setDefaultThemePalette(palette);
+            send(resource, "cssPropertyUpdated",null);
         } else {
             getLogger().info("Unknown command from the browser: " + command);
         }

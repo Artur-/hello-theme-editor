@@ -5,6 +5,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
@@ -18,11 +23,12 @@ import com.helger.css.writer.CSSWriter;
 
 public class ThemeModifier {
 
+    private static File projectFolder = new File(".");
+    private static File frontend = new File(projectFolder, "frontend");
+
     public static void updateCssProperty(String property, String value, String paletteMode) {
-        File projectFolder = new File("."); // FIXME
         String themeName = "hello-theme-editor"; // FIXME
 
-        File frontend = new File(projectFolder, "frontend");
         File themes = new File(frontend, "themes");
         File theme = new File(themes, themeName);
         File styles = new File(theme, "styles.css");
@@ -86,6 +92,7 @@ public class ThemeModifier {
     private static String getExpectedSelector1(String paletteMode) {
         return getExpectedSelector(paletteMode, 0);
     }
+
     private static String getExpectedSelector2(String paletteMode) {
         return getExpectedSelector(paletteMode, 1);
     }
@@ -106,6 +113,26 @@ public class ThemeModifier {
             }
         }
 
+    }
+
+    public static void setDefaultThemePalette(String palette) {
+        File indexHtml = new File(frontend, "index.html");
+        Document doc;
+        try {
+            doc = Jsoup.parse(indexHtml, "utf-8");
+
+            Elements htmlElement = doc.getElementsByTag("html");
+
+            if (palette == null || palette.equals("light")) {
+                htmlElement.removeAttr("theme");
+            } else {
+                htmlElement.attr("theme", palette);
+            }
+            FileUtils.write(indexHtml, doc.toString(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 }

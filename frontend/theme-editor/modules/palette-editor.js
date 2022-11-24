@@ -107,11 +107,11 @@ class Palette extends EditorModule {
     <fieldset class="default-mode">
       <legend>Default mode</legend>
       <label>
-        <input type="radio" name="default-mode" checked="">
+        <input type="radio" name="default-mode" value="light" checked="">
         Light
       </label>
       <label>
-        <input type="radio" name="default-mode">
+        <input type="radio" name="default-mode" value="dark">
         Dark
       </label>
     </fieldset>
@@ -246,6 +246,18 @@ class Palette extends EditorModule {
     this.shadowRoot.querySelector('.mode').addEventListener('change', e => {
       this.mode = e.target.id;
     });
+    // Default mode selector
+    const defaultMode = this.shadowRoot.querySelector('.default-mode');
+    defaultMode.addEventListener('change', e => {
+      this.dispatchEvent(new CustomEvent("default-theme-palette-updated", {
+        detail: {palette: e.target.value},
+        bubbles: true,
+        composed: true,
+      }));
+    });
+    if (document.documentElement.getAttribute("theme") === "dark") {
+      defaultMode.querySelector("[value='dark']").checked=true
+    }
 
     this.lumoEditor.addEventListener(LumoEditor.PROPERTY_CHANGED, e => {
       var entry = e.detail;

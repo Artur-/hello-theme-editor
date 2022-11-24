@@ -138,6 +138,9 @@ export class Connection extends Object {
     sendUpdateCssProperty(property, value, paletteMode) {
       this.send('updateCssProperty', {property,value, paletteMode});
     }
+    sendSetDefaultThemePalette(palette) {
+      this.send('setDefaultThemePalette', {palette});
+    }
 }
 Connection.HEARTBEAT_INTERVAL = 180000;
 var MessageType;
@@ -1101,6 +1104,16 @@ export class VaadinDevTools extends LitElement {
       this.setActive(false);
       this.frontendConnection.sendUpdateCssProperty(e.detail.property, e.detail.value, e.detail.paletteMode);
     }
+    defaultThemePaletteUpdated(e) {
+      console.log(`Update theme palette to ${e.detail.palette}`);
+      if (this.activeTimer) {
+        clearTimeout(this.activeTimer);
+        this.activeTimer = undefined;
+      }
+
+      this.setActive(false);
+      this.frontendConnection.sendSetDefaultThemePalette(e.detail.palette);
+    }
     log(type, message, details, link) {
         const id = this.nextMessageId;
         this.nextMessageId += 1;
@@ -1430,7 +1443,7 @@ export class VaadinDevTools extends LitElement {
         this.hasThemeEditorAccess = false;
         this.checkLicense({name:"vaadin-dev-tools-theme-editor", version: '0.0.1'});
       }
-      return html`<lumo-editor @css-property-updated=${this.cssPropertyUpdated}>
+      return html`<lumo-editor @css-property-updated=${this.cssPropertyUpdated} @default-theme-palette-updated=${this.defaultThemePaletteUpdated}>
       ${this.hasThemeEditorAccess? html``:html`<login-to-access .loginLink=${this.themeEditorLoginLink}></login-to-access>`}</lumo-editor>`;
     }
     copyInfoToClipboard() {
