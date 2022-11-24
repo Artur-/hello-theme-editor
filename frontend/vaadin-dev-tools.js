@@ -920,7 +920,7 @@ export class VaadinDevTools extends LitElement {
               this.features = message.data.features;
             }
             else if ((message === null || message === void 0 ? void 0 : message.command) === 'cssPropertyUpdated') {
-              setTimeout(() =>
+              this.activeTimer = setTimeout(() =>
                this.setActive(true),500);
             }
             else {
@@ -1076,9 +1076,12 @@ export class VaadinDevTools extends LitElement {
     }
     cssPropertyUpdated(e) {
       console.log(`Update ${e.detail.property} -> ${e.detail.value}`);
-      if (!this.liveReloadDisabled) {
-        this.setActive(false);
+      if (this.activeTimer) {
+        clearTimeout(this.activeTimer);
+        this.activeTimer = undefined;
       }
+
+      this.setActive(false);
       this.frontendConnection.sendUpdateCssProperty(e.detail.property, e.detail.value);
     }
     log(type, message, details, link) {
