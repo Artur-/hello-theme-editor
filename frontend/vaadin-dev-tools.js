@@ -173,44 +173,51 @@ export class VaadinDevTools extends LitElement {
         this.unreadErrors = false;
         this.nextMessageId = 1;
         this.transitionDuration = 0;
+
+        // Set custom properties in global scope so that we can use them to style Vaadin overlay components
+        const editorPropsStyleSheet = new CSSStyleSheet();
+        editorPropsStyleSheet.replaceSync(`
+            html {
+              --dev-tools-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+                'Helvetica Neue', sans-serif;
+              --dev-tools-font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+                monospace;
+
+              --dev-tools-font-size: 0.8125rem;
+              --dev-tools-font-size-small: 0.75rem;
+
+              --dev-tools-text-color: rgba(255, 255, 255, 0.8);
+              --dev-tools-text-color-secondary: rgba(255, 255, 255, 0.65);
+              --dev-tools-text-color-emphasis: rgba(255, 255, 255, 0.95);
+              --dev-tools-text-color-active: rgba(255, 255, 255, 1);
+
+              --dev-tools-background-color-inactive: rgba(45, 45, 45, 0.25);
+              --dev-tools-background-color-active: rgba(45, 45, 45, 0.98);
+              --dev-tools-background-color-active-blurred: rgba(45, 45, 45, 0.85);
+
+              --dev-tools-border-radius: 0.5rem;
+              --dev-tools-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+
+              --dev-tools-blue-hsl: ${this.BLUE_HSL};
+              --dev-tools-blue-color: hsl(var(--dev-tools-blue-hsl));
+              --dev-tools-green-hsl: ${this.GREEN_HSL};
+              --dev-tools-green-color: hsl(var(--dev-tools-green-hsl));
+              --dev-tools-grey-hsl: ${this.GREY_HSL};
+              --dev-tools-grey-color: hsl(var(--dev-tools-grey-hsl));
+              --dev-tools-yellow-hsl: ${this.YELLOW_HSL};
+              --dev-tools-yellow-color: hsl(var(--dev-tools-yellow-hsl));
+              --dev-tools-red-hsl: ${this.RED_HSL};
+              --dev-tools-red-color: hsl(var(--dev-tools-red-hsl));
+
+              /* Needs to be in ms, used in JavaScript as well */
+              --dev-tools-transition-duration: 180ms;
+            }
+          `);
+        document.adoptedStyleSheets = [...document.adoptedStyleSheets, editorPropsStyleSheet];
     }
     static get styles() {
         return css `
       :host {
-        --dev-tools-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
-          'Helvetica Neue', sans-serif;
-        --dev-tools-font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-          monospace;
-
-        --dev-tools-font-size: 0.8125rem;
-        --dev-tools-font-size-small: 0.75rem;
-
-        --dev-tools-text-color: rgba(255, 255, 255, 0.8);
-        --dev-tools-text-color-secondary: rgba(255, 255, 255, 0.65);
-        --dev-tools-text-color-emphasis: rgba(255, 255, 255, 0.95);
-        --dev-tools-text-color-active: rgba(255, 255, 255, 1);
-
-        --dev-tools-background-color-inactive: rgba(45, 45, 45, 0.25);
-        --dev-tools-background-color-active: rgba(45, 45, 45, 0.98);
-        --dev-tools-background-color-active-blurred: rgba(45, 45, 45, 0.85);
-
-        --dev-tools-border-radius: 0.5rem;
-        --dev-tools-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.4);
-
-        --dev-tools-blue-hsl: ${this.BLUE_HSL};
-        --dev-tools-blue-color: hsl(var(--dev-tools-blue-hsl));
-        --dev-tools-green-hsl: ${this.GREEN_HSL};
-        --dev-tools-green-color: hsl(var(--dev-tools-green-hsl));
-        --dev-tools-grey-hsl: ${this.GREY_HSL};
-        --dev-tools-grey-color: hsl(var(--dev-tools-grey-hsl));
-        --dev-tools-yellow-hsl: ${this.YELLOW_HSL};
-        --dev-tools-yellow-color: hsl(var(--dev-tools-yellow-hsl));
-        --dev-tools-red-hsl: ${this.RED_HSL};
-        --dev-tools-red-color: hsl(var(--dev-tools-red-hsl));
-
-        /* Needs to be in ms, used in JavaScript as well */
-        --dev-tools-transition-duration: 180ms;
-
         all: initial;
 
         direction: ltr;

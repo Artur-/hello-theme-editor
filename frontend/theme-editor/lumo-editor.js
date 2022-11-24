@@ -107,23 +107,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-editor-module-styles">
       }
     </style>
   </template>
-</dom-module><dom-module id="editor-overlay" theme-for="vaadin-combo-box-overlay vaadin-select-overlay vaadin-overlay vaadin-dialog-overlay">
-  <template>
-    <style>
-      :host([theme~="editor"]) [part="overlay"] {
-        --lumo-font-size-xs: 11px;
-        --lumo-font-size-s: 12px;
-        --lumo-font-size-m: 14px;
-        --lumo-size-m: 30px;
-        --lumo-size-s: 24px;
-        --lumo-space-m: 16px;
-        --lumo-space-s: 8px;
-        --lumo-space-xs: 4px;
-        --lumo-border-radius: 4px;
-        --lumo-font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", Helvetica, Arial, sans-serif;
-      }
-    </style>
-  </template>
 </dom-module>`;
 
 const editorLumoPropertyOverrides = htmlLiteral`
@@ -160,17 +143,29 @@ const editorLumoPropertyOverrides = htmlLiteral`
 
   --lumo-base-color: var(--dev-tools-background-color-active);
 
-  --lumo-contrast-5pct: rgba(255, 255, 255, 0.04);
-  --lumo-contrast-10pct: rgba(255, 255, 255, 0.08);
-  --lumo-contrast-20pct: rgba(255, 255, 255, 0.14);
-  --lumo-contrast-30pct: rgba(255, 255, 255, 0.25);
-  --lumo-contrast-40pct: rgba(255, 255, 255, 0.36);
-  --lumo-contrast-50pct: rgba(255, 255, 255, 0.47);
-  --lumo-contrast-60pct: rgba(255, 255, 255, 0.58);
-  --lumo-contrast-70pct: rgba(255, 255, 255, 0.69);
-  --lumo-contrast-80pct: rgba(255, 255, 255, 0.80);
-  --lumo-contrast-90pct: rgba(255, 255, 255, 0.9);
-  --lumo-contrast: rgba(255, 255, 255, 1);
+  --lumo-tint-5pct: rgba(255, 255, 255, 0.04);
+  --lumo-tint-10pct: rgba(255, 255, 255, 0.08);
+  --lumo-tint-20pct: rgba(255, 255, 255, 0.14);
+  --lumo-tint-30pct: rgba(255, 255, 255, 0.25);
+  --lumo-tint-40pct: rgba(255, 255, 255, 0.36);
+  --lumo-tint-50pct: rgba(255, 255, 255, 0.47);
+  --lumo-tint-60pct: rgba(255, 255, 255, 0.58);
+  --lumo-tint-70pct: rgba(255, 255, 255, 0.69);
+  --lumo-tint-80pct: rgba(255, 255, 255, 0.80);
+  --lumo-tint-90pct: rgba(255, 255, 255, 0.9);
+  --lumo-tint: rgba(255, 255, 255, 1);
+
+  --lumo-contrast-5pct: var(--lumo-tint-5pct);
+  --lumo-contrast-10pct: var(--lumo-tint-10pct);
+  --lumo-contrast-20pct: var(--lumo-tint-20pct);
+  --lumo-contrast-30pct: var(--lumo-tint-30pct);
+  --lumo-contrast-40pct: var(--lumo-tint-40pct);
+  --lumo-contrast-50pct: var(--lumo-tint-50pct);
+  --lumo-contrast-60pct: var(--lumo-tint-60pct);
+  --lumo-contrast-70pct: var(--lumo-tint-70pct);
+  --lumo-contrast-80pct: var(--lumo-tint-80pct);
+  --lumo-contrast-90pct: var(--lumo-tint-90pct);
+  --lumo-contrast: var(--lumo-tint);
 
   --lumo-border-radius-s: 3px;
   --lumo-border-radius-m: 6px;
@@ -932,7 +927,7 @@ customElements.define(LumoEditor.is, LumoEditor);
 
 // Workaround to show all Vaadin component overlays on top of the dev tools window and adapt the same styles
 registerStyles('vaadin-*-overlay, vaadin-overlay', css`
-  /* ${unsafeCSS(editorLumoPropertyOverrides)} */
+  ${unsafeCSS(editorLumoPropertyOverrides)}
 
   :host([theme~="dev-tools-theme-editor"]) {
     z-index: 20001;
