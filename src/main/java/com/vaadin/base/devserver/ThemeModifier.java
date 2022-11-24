@@ -5,8 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.FileUtils;
-
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
@@ -33,12 +31,18 @@ public class ThemeModifier {
 
         CSSDeclaration declaration = htmlHostRule.getAllDeclarations()
                 .findFirst(decl -> decl.getProperty().equals(property));
-        CSSExpression expression = CSSExpression.createSimple(value);
+        CSSExpression expression = value == null ? null : CSSExpression.createSimple(value);
         if (declaration == null) {
-            declaration = new CSSDeclaration(property, expression);
-            htmlHostRule.addDeclaration(declaration);
+            if (expression != null) {
+                declaration = new CSSDeclaration(property, expression);
+                htmlHostRule.addDeclaration(declaration);
+            }
         } else {
-            declaration.setExpression(expression);
+            if (expression == null) {
+                htmlHostRule.removeDeclaration(declaration);
+            }else {
+                declaration.setExpression(expression);
+            }
         }
         try {
             new CSSWriter().setWriteHeaderText(false).writeCSS(styleSheet, new FileWriter(styles));
